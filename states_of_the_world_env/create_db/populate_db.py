@@ -1,10 +1,11 @@
 import mysql.connector
-import requests
-from bs4 import BeautifulSoup
-from crawler import open_country_page
+from crawler import open_country_page, add_all_countries
 
 
 def create_connection():
+    """
+    Create a connection to database
+    """
     try:
         # Creating connection object
         global my_connection
@@ -18,32 +19,25 @@ def create_connection():
         print(e)
 
 
-def insert_db(sql_insert_query, parameters):
-    cursor = my_connection.cursor()  # Creating an instance which is used to execute the 'SQL' statements
-    cursor.execute(sql_insert_query, parameters)
-    print(parameters[0], "was inserted!")
-    my_connection.commit()
+def insert_bd():
+    """
+    Parse list of countries and insert dates in database's table
+    """
+    sql_insert_query = """INSERT INTO Country (Name, Capital, Languages, Government, `Area(km2)`, Population, `Density(/km2)`, Time_Zone)
+                                                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s); """
+    list_countries = add_all_countries()
+    for index in range(0, len(list_countries)):
+        parameters = open_country_page("https://en.wikipedia.org" + list_countries[index])
+        cursor = my_connection.cursor()  # Creating an instance which is used to execute the 'SQL' statements
+        cursor.execute(sql_insert_query, parameters)
+        my_connection.commit()
+        print(parameters[0], "was inserted!")
 
 
-def parse_list_of_countries():
-    sql_insert_query = """INSERT INTO Country (Name, Capital, Languages, `Area(km2)`, Population, `Density(/km2)`, Time_Zone)
-                                                  VALUES (%s, %s, %s, %s, %s, %s, %s); """
-    response = requests.get(
-        url="https://simple.wikipedia.org/wiki/List_of_countries",
-    )
-    content_page = BeautifulSoup(response.content, 'html.parser')
-
-    all_links = content_page.find(id="mw-content-text").find_all("a")
-    for link in all_links:
-        if link['href'].find(
-                "/wiki/") != -1 and link.text != "sovereign states" and link.text != "List of states with limited recognition":
-            insert_db(sql_insert_query, open_country_page("https://en.wikipedia.org" + link['href']))
-
-
-def populate():
+def main():
     create_connection()
     try:
-        parse_list_of_countries()
+        insert_bd()
     except mysql.connector.Error as e:
         print(e)
     finally:
@@ -53,4 +47,4 @@ def populate():
 
 
 if __name__ == "__main__":
-    populate()
+    main()
