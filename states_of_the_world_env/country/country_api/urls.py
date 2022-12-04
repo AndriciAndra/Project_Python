@@ -6,4 +6,5 @@ urlpatterns = [
     path('top-10-countries-<str:my_top>', countries_top_view),
     path('time-zone/<str:my_time>', countries_time_view),
     path('language-<str:my_language>', countries_language_view),
+    path('government-<str:my_government>', countries_government_view),
 ]

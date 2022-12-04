@@ -36,3 +36,15 @@ def countries_language_view(request, my_language):
         countries = Country.objects.filter(pk__in=my_list)
         serializer = serializers.serialize("json", countries)
         return JsonResponse(json.loads(serializer), safe=False, json_dumps_params={'indent': 2})
+
+
+def countries_government_view(request, my_government):
+    if request.method == "GET":
+        countries = Country.objects.all()
+        my_list = list()
+        for country in countries:
+            if my_government in country.government:
+                my_list.append(country.id)
+        countries = Country.objects.filter(pk__in=my_list)
+        serializer = serializers.serialize("json", countries)
+        return JsonResponse(json.loads(serializer), safe=False, json_dumps_params={'indent': 2})

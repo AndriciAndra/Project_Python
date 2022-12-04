@@ -7,6 +7,7 @@ class Country(models.Model):
     name = models.CharField(max_length=255, unique=True, db_column="Name")
     capital = models.CharField(max_length=255, db_column="Capital")
     languages = models.CharField(max_length=1000, db_column="Languages")
+    government = models.CharField(max_length=255, db_column="Government")
     area_in_km2 = models.FloatField(db_column="Area(km2)")
     population = models.BigIntegerField(db_column="Population")
     density_per_km2 = models.FloatField(db_column="Density(/km2)")
