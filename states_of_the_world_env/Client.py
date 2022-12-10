@@ -3,6 +3,11 @@ import json
 
 
 def print_response(my_url, parameter):
+    """
+    Get and print response
+    @param my_url: a substring from the request for that route
+    @param parameter: that field which is printed
+    """
     response = requests.get("http://127.0.0.1:8000/countries" + my_url)
     json_response = response.json()
     for country in json_response:

@@ -8,6 +8,11 @@ import json
 
 # Create your views here.
 def countries_all_view(request):
+    """
+    View for get all countries from database
+    @param request: a web request
+    @return: a web response
+    """
     if request.method == "GET":
         countries = Country.objects.all()
         serializer = serializers.serialize("json", countries)
@@ -15,6 +20,12 @@ def countries_all_view(request):
 
 
 def countries_top_view(request, my_top):
+    """
+    View for top 10 by
+    @param request: a web request
+    @param my_top: that field according to which the top is made
+    @return: a web response
+    """
     if request.method == "GET":
         try:
             countries = Country.objects.all().order_by('-' + my_top)[:10]
@@ -25,6 +36,12 @@ def countries_top_view(request, my_top):
 
 
 def countries_time_view(request, my_time):
+    """
+    View for countries list by zone time
+    @param request: a web request
+    @param my_time: that time zone you are looking for
+    @return: a web response
+    """
     if request.method == "GET":
         countries = Country.objects.filter(time_zone=my_time)
         if not countries:
@@ -34,6 +51,12 @@ def countries_time_view(request, my_time):
 
 
 def countries_language_view(request, my_language):
+    """
+    View for countries list by a specific language
+    @param request: a web request
+    @param my_language: that language you are looking for
+    @return: a web response
+    """
     if request.method == "GET":
         countries = Country.objects.all()
         my_list = list()
@@ -49,6 +72,12 @@ def countries_language_view(request, my_language):
 
 
 def countries_government_view(request, my_government):
+    """
+    View for counties list by specific government
+    @param request: a web request
+    @param my_government: that government you are looking for
+    @return: a web response
+    """
     if request.method == "GET":
         countries = Country.objects.all()
         my_list = list()
